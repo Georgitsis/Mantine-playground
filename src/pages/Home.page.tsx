@@ -1,4 +1,16 @@
-import { AppShell, Burger, Group, Skeleton } from '@mantine/core';
+import { useState } from 'react';
+import { FaRegMoon, FaRegSun } from 'react-icons/fa';
+import {
+  AppShell,
+  Burger,
+  Button,
+  CloseButton,
+  Flex,
+  Group,
+  Input,
+  Skeleton,
+  useMantineColorScheme,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantinex/mantine-logo';
 
@@ -7,27 +19,41 @@ import { MantineLogo } from '@mantinex/mantine-logo';
 
 export function HomePage() {
   const [opened, { toggle }] = useDisclosure();
+  const { toggleColorScheme, colorScheme } = useMantineColorScheme();
+  const [inputValue, setInputValue] = useState('');
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      // navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      footer={{ height: 60 }}
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+        <Group h="100%" px="md" justify="space-between">
+          {/* {<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />} */}
           <MantineLogo size={30} />
+          <Button onClick={() => toggleColorScheme()}>
+            {colorScheme === 'light' ? <FaRegMoon color="white" /> : <FaRegSun color="white" />}
+          </Button>
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="md">
-        Navbar
-        {Array(15)
-          .fill(0)
-          .map((_, index) => (
-            <Skeleton key={index} h={28} mt="sm" animate={false} />
-          ))}
-      </AppShell.Navbar>
-      <AppShell.Main>Main</AppShell.Main>
+      {<AppShell.Main /* style={{ paddingInlineStart: '0' }}*/>Main</AppShell.Main>}
+      <AppShell.Footer>
+        <Input
+          placeholder="Input"
+          value={inputValue}
+          onChange={(event) => setInputValue(event.currentTarget.value)}
+          rightSectionPointerEvents="all"
+          mt="md"
+          rightSection={
+            <CloseButton
+              aria-label="Clear input"
+              onClick={() => setInputValue('')}
+              style={{ display: inputValue ? undefined : 'none' }}
+            />
+          }
+        />
+      </AppShell.Footer>
     </AppShell>
   );
 }
